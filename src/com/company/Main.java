@@ -1,50 +1,17 @@
 package com.company;
 
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
-import javax.crypto.spec.PBEParameterSpec;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.util.Random;
-
 public class Main {
-     public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception {
+        final String secretKey = "ssshhhhhhhhhhh!!!!";
 
-            FileInputStream inFile = new FileInputStream("plainfile.txt");
-            FileOutputStream outFile = new FileOutputStream("plainfile.des");
+        String originalString = "Raden Gilang P";
+        String encryptedString = AES.encrypt(originalString, secretKey) ;
+        String decryptedString = AES.decrypt(encryptedString, secretKey) ;
 
-            String password = "javapapers";
-            PBEKeySpec pbeKeySpec = new PBEKeySpec(password.toCharArray());
-            SecretKeyFactory secretKeyFactory = SecretKeyFactory
-                    .getInstance("PBEWithMD5AndTripleDES");
-            SecretKey secretKey = secretKeyFactory.generateSecret(pbeKeySpec);
-
-            byte[] salt = new byte[8];
-            Random random = new Random();
-            random.nextBytes(salt);
-
-            PBEParameterSpec pbeParameterSpec = new PBEParameterSpec(salt, 100);
-            Cipher cipher = Cipher.getInstance("PBEWithMD5AndTripleDES");
-            cipher.init(Cipher.ENCRYPT_MODE, secretKey, pbeParameterSpec);
-            outFile.write(salt);
-
-            byte[] input = new byte[64];
-            int bytesRead;
-            while ((bytesRead = inFile.read(input)) != -1) {
-                byte[] output = cipher.update(input, 0, bytesRead);
-                if (output != null)
-                    outFile.write(output);
-            }
-
-            byte[] output = cipher.doFinal();
-            if (output != null)
-                outFile.write(output);
-
-            inFile.close();
-            outFile.flush();
-            outFile.close();
-        }
+        System.out.println(originalString);
+        System.out.println(encryptedString);
+        System.out.println(decryptedString);
     }
+
+}
 
